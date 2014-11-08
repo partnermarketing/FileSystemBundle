@@ -1,0 +1,329 @@
+<?php
+
+namespace Partnermarketing\FileSystemBundle\Adapter;
+
+use Aws\Common\Enum\Region;
+use Aws\S3\Enum\CannedAcl;
+use Aws\S3\S3Client as AmazonClient;
+use Guzzle\Http\EntityBody;
+use Guzzle\Http\Mimetypes;
+
+/**
+ * Amazon specific file system adapter
+ */
+class AmazonS3 implements AdapterInterface
+{
+    protected $service;
+    protected $bucket;
+    protected $localTmpDir;
+    protected $options;
+    protected $ensureBucket = false;
+
+    /**
+     * Constructor for AmazonS3 adapter
+     *
+     * @param \Aws\S3\S3Client $service
+     * @param $bucket
+     * @param string           $acl
+     * @param array            $options
+     */
+    public function __construct(AmazonClient $service, $bucket, $acl = CannedAcl::PUBLIC_READ, $localTmpDir, $options = array())
+    {
+        $this->service = $service;
+        $this->bucket  = $bucket;
+        $this->localTmpDir = $localTmpDir;
+        $this->options = array_replace_recursive(
+            array('create' => false, 'region' => Region::EU_WEST_1, 'ACL' => $acl),
+            $options
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function read($path)
+    {
+        // In this method only, $path can be absolute, for reading files from
+        // outside of the file system directory, e.g. uploads, fixtures.
+        if (file_exists($path)) {
+            return file_get_contents($path);
+        }
+
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        $this->ensureBucketExists();
+
+        $response = $this->service->getObject(array(
+            'Bucket' => $bucket,
+            'Key' => $path
+        ));
+
+        $response['Body']->rewind();
+
+        return (string) $response['Body'];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function write($path, $source)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        return $this->writeContent($path, EntityBody::factory(fopen($source, 'r')));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function writeContent($path, $content)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        $this->ensureBucketExists();
+
+        $response = $this->service->putObject(array(
+            'Bucket' => $bucket,
+            'Key' => $path,
+            'Body' => $content,
+            'ACL' => $this->options['ACL'],
+            'ContentType' => Mimetypes::getInstance()->fromFilename($path)
+        ));
+
+        $this->service->waitUntilObjectExists(array(
+            'Bucket' => $bucket,
+            'Key'    => $path
+        ));
+
+        return $path;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rename($sourcePath, $targetPath)
+    {
+        list($sourcePath, $sourceBucket) = $this->pathOrUrlToPath($sourcePath);
+        list($targetPath, $targetBucket) = $this->pathOrUrlToPath($targetPath);
+
+        $this->ensureBucketExists();
+
+        $this->service->copyObject(array(
+            'Bucket' => $targetBucket,
+            'Key' => $targetPath,
+            'CopySource' => urlencode($sourceBucket.'/'.$sourcePath),
+            'ACL' => $this->options['ACL']
+        ));
+
+        $this->delete($sourcePath);
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function delete($path)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        $this->ensureBucketExists();
+
+        return $this->service->deleteObject(array(
+            'Bucket' => $bucket,
+            'Key' => $path
+        ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFiles($directory = "")
+    {
+        list($directory, $bucket) = $this->pathOrUrlToPath($directory);
+
+        $this->ensureBucketExists();
+
+        $list = $this->service->getIterator('ListObjects', array(
+            'Bucket' => $bucket, 'Prefix' => $directory
+        ));
+
+        $files = [];
+        foreach ($list as $object) {
+            $files[] = $object['Key'];
+        }
+
+        sort($files);
+
+        return $files;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function copyFiles($sourceDir, $targetDir)
+    {
+        list($sourceDir, $sourceBucket) = $this->pathOrUrlToPath($sourceDir);
+        list($targetDir, $targetBucket) = $this->pathOrUrlToPath($targetDir);
+
+        /*
+         * Add '/' character to the directories if necessary
+         */
+        $sourceDir = $sourceDir . (substr($sourceDir, -1) == '/' ? '' : '/');
+        $targetDir = $targetDir . (substr($targetDir, -1) == '/' ? '' : '/');
+
+        $this->ensureBucketExists();
+
+        $files = $this->getFiles($sourceDir);
+
+        $batch = array();
+        for ($i = 0; $i < count($files); $i++) {
+            $targetFile = str_replace($sourceDir, "", $files[$i]);
+            $batch[] =  $this->service->getCommand('CopyObject', array(
+                'Bucket'     => $targetBucket,
+                'Key'        => "{$targetDir}{$targetFile}",
+                'CopySource' => "{$sourceBucket}/{$files[$i]}",
+            ));
+        }
+
+        try {
+            $this->service->execute($batch);
+        } catch (\Exception $e) {
+            throw new \RuntimeException(sprintf('Failed to copy files from %s to %s.', $sourceDir, $targetDir));
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function exists($path)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        return $this->service->doesObjectExist($bucket, $path);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isDirectory($path)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        if ($this->exists($path.'/')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Calls the bucket exist method, and returns its result.
+     *
+     * @return boolean
+     */
+    public function checkBucket()
+    {
+        return $this->ensureBucketExists();
+    }
+
+    /**
+    * Ensures the specified bucket exists. If is does not, and create is true, it will try to create it.
+    *
+    * @return boolean
+    */
+    private function ensureBucketExists()
+    {
+        if ($this->ensureBucket) {
+            return true;
+        }
+
+        if ($this->service->doesBucketExist($this->bucket)) {
+            $this->ensureBucket = true;
+
+            return true;
+        }
+
+        if (!$this->options['create']) {
+            throw new \RuntimeException(sprintf(
+                'The configured bucket "%s" does not exist.',
+                $this->bucket
+            ));
+        }
+
+        $response = $this->service->createBucket(
+            array('Bucket' => $this->bucket, 'LocationConstraint' => $this->options['region'])
+        );
+
+        $this->service->waitUntilBucketExists(array('Bucket' => $this->bucket));
+
+        if (!$response['Location']) {
+            throw new \RuntimeException(sprintf(
+                'Failed to create the configured bucket "%s".',
+                $this->bucket
+            ));
+        }
+
+        $this->ensureBucket = true;
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getURL($path)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        return $this->service->getObjectUrl($bucket, $path);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function copyToLocalTemporaryFile($path)
+    {
+        $content = $this->read($path);
+        $target = tempnam($this->localTmpDir, null);
+
+        file_put_contents($target, $content);
+
+        return $target;
+    }
+
+    /**
+     * Returns an s3 location in normalised format, plus parses the bucket name
+     * from the URL if a URL is used.
+     *
+     * @param  type $it
+     * @return type
+     */
+    private function pathOrUrlToPath($it)
+    {
+        $bucket = $this->bucket;
+
+        if (empty($it)) {
+            return ['', $bucket];
+        }
+        if (strpos($it, 'http://') === 0 || strpos($it, 'https://') === 0) {
+            $path = parse_url($it, PHP_URL_PATH);
+
+            /**
+             *  Try to detect the bucket name from the hostname
+             */
+            $host = parse_url($it, PHP_URL_HOST);
+            if (preg_match('/.s3[-\.a-z0-9]*\.amazonaws\.com$/', $host)) {
+                $bucket = substr($host, 0, strpos($host, '.s3'));
+            } else {
+                $bucket = $host;
+            }
+        } else {
+            $path = $it;
+        }
+
+        return [ltrim($path, '/'), $bucket];
+    }
+}

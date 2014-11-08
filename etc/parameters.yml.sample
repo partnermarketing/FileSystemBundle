@@ -1,0 +1,16 @@
+parameters:
+    partnermarketing_file_system:
+        # 'default_file_system' can be 'amazon_s3', 'local_storage'
+        default_file_system: local_storage
+
+        config:
+            amazon_s3:
+                key:    xxxxxxxx
+                secret: xxxxxxxx
+                bucket: xxxxxxxx
+                region: xxxxxxxx
+            local_storage:
+                path: /path/to/filesystem
+                url: 'http://xxxxxxxx/xxxxxxxx'
+
+        tmp_dir: /tmp
