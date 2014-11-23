@@ -21,4 +21,26 @@ class ServerFileSystemTest extends \PHPUnit_Framework_TestCase
         $this->assertStringEndsWith('Unit/Factory/FileSystemFactoryTest.php', $files[0]);
         $this->assertStringEndsWith('Unit/ServerFileSystem/ServerFileSystemTest.php', $files[1]);
     }
+
+    public function testDeleteFilesInDirectoryRecursively()
+    {
+        $dir = __DIR__ . '/deleteFilesInDirectoryRecursively/';
+
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+        file_put_contents($dir . '1.txt', '1');
+        file_put_contents($dir . '2.txt', '2');
+        mkdir($dir . 'subdir');
+        file_put_contents($dir . 'subdir/3.txt', '3');
+        file_put_contents($dir . 'subdir/4.txt', '4');
+
+        $filesBefore = ServerFileSystem::getFilesInDirectory($dir);
+        $this->assertCount(4, $filesBefore);
+
+        $files = ServerFileSystem::deleteFilesInDirectoryRecursively($dir);
+
+        $filesAfter = ServerFileSystem::getFilesInDirectory($dir);
+        $this->assertCount(0, $filesAfter);
+    }
 }

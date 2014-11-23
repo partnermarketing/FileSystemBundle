@@ -27,4 +27,26 @@ class ServerFileSystem
 
         return $files;
     }
+
+    public static function deleteFilesInDirectoryRecursively($dir)
+    {
+        if (!is_dir($dir)) {
+            return;
+        }
+
+        $iterator = new DirectoryIterator($dir);
+
+        foreach ($iterator as $file) {
+            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
+                continue;
+            }
+
+            if (is_dir($file->getPathname())) {
+                self::deleteFilesInDirectoryRecursively($file->getPathname());
+                rmdir($file->getPathname());
+            } else {
+                unlink($file->getPathname());
+            }
+        }
+    }
 }
