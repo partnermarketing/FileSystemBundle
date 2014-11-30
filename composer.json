@@ -2,7 +2,7 @@
     "name": "partnermarketing/file-system-bundle",
     "description": "A file system component supporting different file storage adapters.",
     "autoload": {
-        "psr-4": { "Partnermarketing\\FileSystemBundle": "src/" }
+        "psr-4": { "Partnermarketing\\FileSystemBundle\\": "src/" }
     },
     "require": {
         "php": ">=5.4.0",
