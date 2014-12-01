@@ -3,7 +3,7 @@
 namespace Partnermarketing\FileSystemBundle\Adapter;
 
 /**
- * Interface for all filesystem adapters.
+ * Interface for all file system adapters.
  */
 interface AdapterInterface
 {

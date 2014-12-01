@@ -10,7 +10,7 @@ parameters:
                 bucket: xxxxxxxx
                 region: xxxxxxxx
             local_storage:
-                path: /path/to/filesystem
+                path: /path/to/file-system
                 url: 'http://xxxxxxxx/xxxxxxxx'
 
         tmp_dir: /tmp
