@@ -205,7 +205,8 @@ class LocalStorage implements AdapterInterface
     public function copyToLocalTemporaryFile($path)
     {
         $content = $this->read($path);
-        $target = tempnam($this->localTmpDir, null);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $target = tempnam($this->localTmpDir, null) . '.' . $extension;
 
         file_put_contents($target, $content);
 
