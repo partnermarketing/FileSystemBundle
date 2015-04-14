@@ -88,7 +88,7 @@ interface AdapterInterface
     public function isDirectory($path);
 
     /**
-     * Gets the Absoulte URL to an a file
+     * Gets the Absolute URL to an a file
      *
      * @param string $path
      *
