@@ -57,7 +57,14 @@ class FileSystemFactory
             'secret' => $this->config['amazon_s3']['secret'],
             'region' => $this->config['amazon_s3']['region']
         ));
-        $fileSystem = new AmazonS3($service , $this->config['amazon_s3']['bucket'], CannedAcl::PUBLIC_READ, $this->tmpDir);
+        $acl = CannedAcl::PUBLIC_READ;
+        if (!empty($this->config['amazon_s3']['acl'])) {
+            $acl = $this->config['amazon_s3']['acl'];
+        }
+        $tmpDir = $this->tmpDir;
+        $bucket = $this->config['amazon_s3']['bucket'];
+        
+        $fileSystem = new AmazonS3($service , $bucket, $acl, $tmpDir);
 
         return $fileSystem;
     }
