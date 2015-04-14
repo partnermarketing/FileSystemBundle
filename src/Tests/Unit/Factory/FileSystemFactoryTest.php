@@ -42,4 +42,33 @@ class FileSystemFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\AmazonS3',
             $this->factory->build('amazon_s3'));
     }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Invalid S3 acl value.
+     */
+    public function testAmazonConfigAclInvalid()
+    {
+        $this->config = [
+            'local_storage' => ['path' => '', 'url' => ''],
+            'amazon_s3' => ['key' => '', 'secret' => '', 'region' => '', 'bucket' => '', 'acl' => 'read'],
+        ];
+        $this->factory = new FileSystemFactory('amazon_s3', $this->config, '/tmp');
+        $this->factory->build('amazon_s3');
+    }
+
+    /**
+     * Should
+     */
+    public function testAmazonConfigAclValid()
+    {
+        $this->config = [
+            'local_storage' => ['path' => '', 'url' => ''],
+            'amazon_s3' => ['key' => '', 'secret' => '', 'region' => '', 'bucket' => '', 'acl' => 'public-read'],
+        ];
+        $this->factory = new FileSystemFactory('amazon_s3', $this->config, '/tmp');
+
+        $s3Adaptor = $this->factory->build('amazon_s3');
+        $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\AmazonS3',$s3Adaptor);
+    }
 }

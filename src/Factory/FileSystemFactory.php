@@ -59,6 +59,18 @@ class FileSystemFactory
         ));
         $fileSystem = new AmazonS3($service , $this->config['amazon_s3']['bucket'], CannedAcl::PUBLIC_READ, $this->tmpDir);
 
+        $acl = CannedAcl::PUBLIC_READ;
+        if (!empty($this->config['amazon_s3']['acl'])) {
+            if(!in_array($this->config['amazon_s3']['acl'], CannedAcl::values())){
+                throw new \Exception('Invalid S3 acl value.');
+            }
+            $acl = $this->config['amazon_s3']['acl'];
+        }
+        $bucket = $this->config['amazon_s3']['bucket'];
+
+        $fileSystem = new AmazonS3($service , $bucket, $acl, $this->tmpDir);
+
+
         return $fileSystem;
     }
 }
