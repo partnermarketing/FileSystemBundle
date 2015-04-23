@@ -1,9 +1,10 @@
-[![Stories in Ready](https://badge.waffle.io/partnermarketing/PartnermarketingFileSystemBundle.png?label=ready&title=Ready)](https://waffle.io/partnermarketing/PartnermarketingFileSystemBundle)
 FileSystemBundle
 ================
 
 [![Build Status](https://travis-ci.org/partnermarketing/PartnermarketingFileSystemBundle.svg)](https://travis-ci.org/partnermarketing/PartnermarketingFileSystemBundle)
-
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/partnermarketing/PartnermarketingFileSystemBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/partnermarketing/PartnermarketingFileSystemBundle/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/partnermarketing/PartnermarketingFileSystemBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/partnermarketing/PartnermarketingFileSystemBundle/?branch=master)
+[![HHVM Status](http://hhvm.h4cc.de/badge/partnermarketing/file-system-bundle.svg)](http://hhvm.h4cc.de/package/partnermarketing/file-system-bundle)
 
 FileSystemBundle is a file system component supporting different file storage adapters.
 
