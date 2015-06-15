@@ -16,7 +16,7 @@ interface AdapterInterface
     public function read($path);
 
     /**
-     * Writes the content of the $source into the $path returns the URL
+     * Writes the content of the $source into the $path returns the same $path.
      *
      * @param  string $path
      * @param  string $source
@@ -25,7 +25,7 @@ interface AdapterInterface
     public function write($path, $source);
 
     /**
-     * Writes the $content into the $path returns the URL
+     * Writes the $content into the $path returns the same $path.
      *
      * @param  string $path
      * @param  string $content
@@ -34,7 +34,7 @@ interface AdapterInterface
     public function writeContent($path, $content);
 
     /**
-     * Deletes the file $path
+     * Deletes the file at $path.
      *
      * @param  string  $path
      * @return boolean If successful.
@@ -42,7 +42,7 @@ interface AdapterInterface
     public function delete($path);
 
     /**
-     * Renames a file
+     * Renames a file.
      *
      * @param  string  $sourcePath
      * @param  string  $targetPath
@@ -53,27 +53,24 @@ interface AdapterInterface
     /**
      * Returns an array of files under given directory
      *
-     * @param string $directory
-     *
-     * @returns array
+     * @param  string $directory
+     * @return array
      */
     public function getFiles($directory = '');
 
     /**
-     * Copies all files under given source directory to given target directory
+     * Copies all files under given source directory to the given target directory.
      *
-     * @param string $sourceDir
-     * @param string $targetDir
-     *
-     * @return boolean
+     * @param  string  $sourceDir
+     * @param  string  $targetDir
+     * @return boolean If successful.
      */
     public function copyFiles($sourceDir, $targetDir);
 
     /**
      * Checks if the $path exists
      *
-     * @param string $path
-     *
+     * @param  string $path
      * @return boolean
      */
     public function exists($path);
@@ -81,18 +78,16 @@ interface AdapterInterface
     /**
      * Checks if $path is a directory
      *
-     * @param string $path
-     *
+     * @param  string  $path
      * @return boolean
      */
     public function isDirectory($path);
 
     /**
-     * Gets the Absolute URL to an a file
+     * Gets the absolute URL to the file at $path.
      *
-     * @param string $path
-     *
-     * @return string URL to the file
+     * @param  string $path
+     * @return string URL to the file.
      */
     public function getURL($path);
 
