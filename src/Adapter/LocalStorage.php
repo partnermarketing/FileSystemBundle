@@ -163,6 +163,7 @@ class LocalStorage implements AdapterInterface
             closedir($handle);
         }
 
+        return true;
     }
 
     /**
