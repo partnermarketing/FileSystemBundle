@@ -299,30 +299,32 @@ class AmazonS3 implements AdapterInterface
      * Returns an s3 location in normalised format, plus parses the bucket name
      * from the URL if a URL is used.
      *
-     * @param  type $it
-     * @return type
+     * @param  string $input
+     * @return array  Contains two values:
+     *                Index 0: the path to the file in S3.
+     *                Index 1: the S3 bucket name.
      */
-    private function pathOrUrlToPath($it)
+    private function pathOrUrlToPath($input)
     {
         $bucket = $this->bucket;
 
-        if (empty($it)) {
+        if (empty($input)) {
             return ['', $bucket];
         }
-        if (strpos($it, 'http://') === 0 || strpos($it, 'https://') === 0) {
-            $path = parse_url($it, PHP_URL_PATH);
+        if (strpos($input, 'http://') === 0 || strpos($input, 'https://') === 0) {
+            $path = parse_url($input, PHP_URL_PATH);
 
             /**
              *  Try to detect the bucket name from the hostname
              */
-            $host = parse_url($it, PHP_URL_HOST);
+            $host = parse_url($input, PHP_URL_HOST);
             if (preg_match('/.s3[-\.a-z0-9]*\.amazonaws\.com$/', $host)) {
                 $bucket = substr($host, 0, strpos($host, '.s3'));
             } else {
                 $bucket = $host;
             }
         } else {
-            $path = $it;
+            $path = $input;
         }
 
         return [ltrim($path, '/'), $bucket];

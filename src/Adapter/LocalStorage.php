@@ -214,18 +214,23 @@ class LocalStorage implements AdapterInterface
         return $target;
     }
 
-    private function pathOrUrlToPath($it)
+    /**
+     * @param  string $input
+     * @return array  The path to the file inside the file system. Does not contain a preceding
+     *                slash.
+     */
+    private function pathOrUrlToPath($input)
     {
-        if (empty($it)) {
+        if (empty($input)) {
             return '';
         }
 
-        if (strpos($it, $this->webUrl) === 0) {
-            $it = str_replace($this->webUrl, '', $it);
-        } elseif (strpos($it, 'http://') === 0 || strpos($it, 'https://') === 0) {
-            $it = parse_url($it, PHP_URL_PATH);
+        if (strpos($input, $this->webUrl) === 0) {
+            $input = str_replace($this->webUrl, '', $input);
+        } elseif (strpos($input, 'http://') === 0 || strpos($input, 'https://') === 0) {
+            $input = parse_url($input, PHP_URL_PATH);
         }
 
-        return trim($it, '/');
+        return trim($input, '/');
     }
 }
