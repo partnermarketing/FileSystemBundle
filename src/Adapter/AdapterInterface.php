@@ -92,6 +92,14 @@ interface AdapterInterface
     public function getURL($path);
 
     /**
+     * Gets the size, in bytes, of the file at $path.
+     *
+     * @param  string $path
+     * @return int    File size in bytes.
+     */
+    public function getFileSize($path);
+
+    /**
      * Copy a file to the local temporary directory, and return the full path.
      *
      * @param  string $path

@@ -10,25 +10,33 @@ use Partnermarketing\FileSystemBundle\Exception\FileDoesNotExistException;
 class LocalStorage implements AdapterInterface
 {
     protected $service;
+
+    /**
+     * Contains a preceding slash, and no trailing slash.
+     *
+     * @var string
+     */
     protected $absolutePath;
+
     protected $webUrl;
+
     protected $localTmpDir;
 
     /**
      * Constructor for LocalStorage adapter
      */
-    public function __construct($service, $parameter, $localTmpDir)
+    public function __construct($service, array $parameters, $localTmpDir)
     {
         $this->service = $service;
 
-        $absolutePathNormalised = '/' . trim($parameter['path'], '/');
+        $absolutePathNormalised = '/' . trim($parameters['path'], '/');
         if (is_dir($absolutePathNormalised) && realpath($absolutePathNormalised)) {
             $this->absolutePath = realpath($absolutePathNormalised);
         } else {
             throw new FileDoesNotExistException($absolutePathNormalised);
         }
 
-        $this->webUrl = trim($parameter['url'], '/');
+        $this->webUrl = trim($parameters['url'], '/');
 
         $this->localTmpDir = $localTmpDir;
     }
@@ -198,6 +206,16 @@ class LocalStorage implements AdapterInterface
         $path = $this->pathOrUrlToPath($path);
 
         return $this->webUrl.'/'.$path;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFileSize($path)
+    {
+        $fullPath = $this->absolutePath . '/' . $this->pathOrUrlToPath($path);
+
+        return filesize($fullPath);
     }
 
     /**

@@ -17,9 +17,9 @@ class ServerFileSystemTest extends \PHPUnit_Framework_TestCase
     {
         $files = ServerFileSystem::getFilesInDirectory(__DIR__  . '/../');
 
-        $this->assertCount(2, $files);
-        $this->assertStringEndsWith('Unit/Factory/FileSystemFactoryTest.php', $files[0]);
-        $this->assertStringEndsWith('Unit/ServerFileSystem/ServerFileSystemTest.php', $files[1]);
+        $this->assertCount(4, $files);
+        $this->assertStringEndsWith('Unit/Adapter/LocalStorageTest.php', $files[0]);
+        $this->assertStringEndsWith('Unit/Factory/FileSystemFactoryTest.php', $files[2]);
     }
 
     public function testDeleteFilesInDirectoryRecursively()

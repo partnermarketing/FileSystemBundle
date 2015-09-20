@@ -284,6 +284,19 @@ class AmazonS3 implements AdapterInterface
     /**
      * {@inheritDoc}
      */
+    public function getFileSize($path)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+
+        return (int) $this->service->headObject([
+            'Bucket' => $bucket,
+            'Key' => $path,
+        ])->get('ContentLength');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function copyToLocalTemporaryFile($path)
     {
         $content = $this->read($path);
