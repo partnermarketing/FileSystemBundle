@@ -135,6 +135,14 @@ class FileSystem implements AdapterInterface
     /**
      * {@inheritDoc}
      */
+    public function getFileSize($path)
+    {
+        return $this->adapter->getFileSize($path);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function copyToLocalTemporaryFile($path)
     {
         return $this->adapter->copyToLocalTemporaryFile($path);

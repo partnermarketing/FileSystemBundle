@@ -10,25 +10,33 @@ use Partnermarketing\FileSystemBundle\Exception\FileDoesNotExistException;
 class LocalStorage implements AdapterInterface
 {
     protected $service;
+
+    /**
+     * Contains a preceding slash, and no trailing slash.
+     *
+     * @var string
+     */
     protected $absolutePath;
+
     protected $webUrl;
+
     protected $localTmpDir;
 
     /**
      * Constructor for LocalStorage adapter
      */
-    public function __construct($service, $parameter, $localTmpDir)
+    public function __construct($service, array $parameters, $localTmpDir)
     {
         $this->service = $service;
 
-        $absolutePathNormalised = '/' . trim($parameter['path'], '/');
+        $absolutePathNormalised = '/' . trim($parameters['path'], '/');
         if (is_dir($absolutePathNormalised) && realpath($absolutePathNormalised)) {
             $this->absolutePath = realpath($absolutePathNormalised);
         } else {
             throw new FileDoesNotExistException($absolutePathNormalised);
         }
 
-        $this->webUrl = trim($parameter['url'], '/');
+        $this->webUrl = trim($parameters['url'], '/');
 
         $this->localTmpDir = $localTmpDir;
     }
@@ -203,6 +211,16 @@ class LocalStorage implements AdapterInterface
     /**
      * {@inheritDoc}
      */
+    public function getFileSize($path)
+    {
+        $fullPath = $this->absolutePath . '/' . $this->pathOrUrlToPath($path);
+
+        return filesize($fullPath);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function copyToLocalTemporaryFile($path)
     {
         $content = $this->read($path);
@@ -214,18 +232,23 @@ class LocalStorage implements AdapterInterface
         return $target;
     }
 
-    private function pathOrUrlToPath($it)
+    /**
+     * @param  string $input
+     * @return array  The path to the file inside the file system. Does not contain a preceding
+     *                slash.
+     */
+    private function pathOrUrlToPath($input)
     {
-        if (empty($it)) {
+        if (empty($input)) {
             return '';
         }
 
-        if (strpos($it, $this->webUrl) === 0) {
-            $it = str_replace($this->webUrl, '', $it);
-        } elseif (strpos($it, 'http://') === 0 || strpos($it, 'https://') === 0) {
-            $it = parse_url($it, PHP_URL_PATH);
+        if (strpos($input, $this->webUrl) === 0) {
+            $input = str_replace($this->webUrl, '', $input);
+        } elseif (strpos($input, 'http://') === 0 || strpos($input, 'https://') === 0) {
+            $input = parse_url($input, PHP_URL_PATH);
         }
 
-        return trim($it, '/');
+        return trim($input, '/');
     }
 }
