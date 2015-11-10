@@ -17,7 +17,7 @@ class AmazonS3 implements AdapterInterface
     protected $bucket;
     protected $localTmpDir;
     protected $options;
-    protected $ensureBucket = false;
+    protected $haveEnsuredBucketExists = false;
 
     /**
      * Constructor for AmazonS3 adapter
@@ -236,12 +236,12 @@ class AmazonS3 implements AdapterInterface
     */
     private function ensureBucketExists()
     {
-        if ($this->ensureBucket) {
+        if ($this->haveEnsuredBucketExists) {
             return true;
         }
 
         if ($this->service->doesBucketExist($this->bucket)) {
-            $this->ensureBucket = true;
+            $this->haveEnsuredBucketExists = true;
 
             return true;
         }
@@ -266,7 +266,7 @@ class AmazonS3 implements AdapterInterface
             ));
         }
 
-        $this->ensureBucket = true;
+        $this->haveEnsuredBucketExists = true;
 
         return true;
     }
