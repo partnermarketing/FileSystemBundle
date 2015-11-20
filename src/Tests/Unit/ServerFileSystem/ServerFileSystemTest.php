@@ -17,7 +17,7 @@ class ServerFileSystemTest extends \PHPUnit_Framework_TestCase
     {
         $files = ServerFileSystem::getFilesInDirectory(__DIR__  . '/../');
 
-        $this->assertCount(4, $files);
+        $this->assertCount(5, $files);
         $this->assertStringEndsWith('Unit/Adapter/LocalStorageTest.php', $files[0]);
         $this->assertStringEndsWith('Unit/Factory/FileSystemFactoryTest.php', $files[2]);
     }
