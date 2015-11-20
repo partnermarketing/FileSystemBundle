@@ -13,11 +13,11 @@ use Guzzle\Http\Mimetypes;
  */
 class AmazonS3 implements AdapterInterface
 {
-    protected $service;
-    protected $bucket;
-    protected $localTmpDir;
-    protected $options;
-    protected $haveEnsuredBucketExists = false;
+    private $service;
+    private $bucket;
+    private $localTmpDir;
+    private $options;
+    private $haveEnsuredBucketExists = false;
 
     /**
      * Constructor for AmazonS3 adapter
