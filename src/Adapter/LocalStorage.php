@@ -9,18 +9,18 @@ use Partnermarketing\FileSystemBundle\Exception\FileDoesNotExistException;
  */
 class LocalStorage implements AdapterInterface
 {
-    protected $service;
+    private $service;
 
     /**
      * Contains a preceding slash, and no trailing slash.
      *
      * @var string
      */
-    protected $absolutePath;
+    private $absolutePath;
 
-    protected $webUrl;
+    private $webUrl;
 
-    protected $localTmpDir;
+    private $localTmpDir;
 
     /**
      * Constructor for LocalStorage adapter

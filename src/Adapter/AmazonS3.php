@@ -13,11 +13,11 @@ use Guzzle\Http\Mimetypes;
  */
 class AmazonS3 implements AdapterInterface
 {
-    protected $service;
-    protected $bucket;
-    protected $localTmpDir;
-    protected $options;
-    protected $ensureBucket = false;
+    private $service;
+    private $bucket;
+    private $localTmpDir;
+    private $options;
+    private $haveEnsuredBucketExists = false;
 
     /**
      * Constructor for AmazonS3 adapter
@@ -236,12 +236,12 @@ class AmazonS3 implements AdapterInterface
     */
     private function ensureBucketExists()
     {
-        if ($this->ensureBucket) {
+        if ($this->haveEnsuredBucketExists) {
             return true;
         }
 
         if ($this->service->doesBucketExist($this->bucket)) {
-            $this->ensureBucket = true;
+            $this->haveEnsuredBucketExists = true;
 
             return true;
         }
@@ -266,7 +266,7 @@ class AmazonS3 implements AdapterInterface
             ));
         }
 
-        $this->ensureBucket = true;
+        $this->haveEnsuredBucketExists = true;
 
         return true;
     }
