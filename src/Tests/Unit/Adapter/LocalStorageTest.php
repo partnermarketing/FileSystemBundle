@@ -32,4 +32,12 @@ class LocalStorageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedSize, $actualSize);
     }
+
+    public function testGetFiles()
+    {
+        $result = $this->adapter->getFiles();
+
+        $this->assertCount(3, $result);
+        $this->assertContains('sub-dir/test2.txt', $result);
+    }
 }

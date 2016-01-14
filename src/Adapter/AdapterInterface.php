@@ -51,7 +51,7 @@ interface AdapterInterface
     public function rename($sourcePath, $targetPath);
 
     /**
-     * Returns an array of files under given directory
+     * Returns an array of files under given directory. Recurses into any child directories.
      *
      * @param  string $directory
      * @return array
