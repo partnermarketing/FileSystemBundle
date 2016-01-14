@@ -3,6 +3,7 @@
 namespace Partnermarketing\FileSystemBundle\Adapter;
 
 use Partnermarketing\FileSystemBundle\Exception\FileDoesNotExistException;
+use Partnermarketing\FileSystemBundle\ServerFileSystem\ServerFileSystem;
 
 /**
  * LocalStorage specific file system adapter
@@ -112,22 +113,11 @@ class LocalStorage implements AdapterInterface
     {
         $directory = $this->pathOrUrlToPath($directory);
 
-        $array = [];
+        $files = ServerFileSystem::getFilesInDirectory($this->absolutePath . '/' . $directory);
 
-        if ($handle = opendir($this->absolutePath.'/'.$directory)) {
-            while (false !== ($entry = readdir($handle))) {
-                if ($entry != "." && $entry != "..") {
-                    if (!empty($directory)) {
-                        $array[] = $directory.'/'.$entry;
-                    } else {
-                        $array[] = $entry;
-                    }
-                }
-            }
-            closedir($handle);
-        }
-
-        return $array;
+        return array_map(function ($file) {
+            return str_replace($this->absolutePath . '/', '', $file);
+        }, $files);
     }
 
     public function mkdir($dir)
