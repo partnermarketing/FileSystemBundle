@@ -56,7 +56,8 @@ class FileSystemFactory
                 'key'    => $this->config['amazon_s3']['key'],
                 'secret' => $this->config['amazon_s3']['secret']
             ),
-            'region' => $this->config['amazon_s3']['region']
+            'region' => $this->config['amazon_s3']['region'],
+            'version' => '2006-03-01'
         ));
         $fileSystem = new AmazonS3($service , $this->config['amazon_s3']['bucket'], 'public-read', $this->tmpDir);
 
