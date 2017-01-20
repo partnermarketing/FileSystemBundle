@@ -2,8 +2,6 @@
 
 namespace Partnermarketing\FileSystemBundle\Adapter;
 
-use Aws\Common\Enum\Region;
-use Aws\S3\Enum\CannedAcl;
 use Aws\S3\S3Client as AmazonClient;
 use Guzzle\Http\EntityBody;
 use Guzzle\Http\Mimetypes;
@@ -27,13 +25,13 @@ class AmazonS3 implements AdapterInterface
      * @param string           $acl
      * @param array            $options
      */
-    public function __construct(AmazonClient $service, $bucket, $acl = CannedAcl::PUBLIC_READ, $localTmpDir, $options = array())
+    public function __construct(AmazonClient $service, $bucket, $acl = 'public-read', $localTmpDir, $options = array())
     {
         $this->service = $service;
         $this->bucket  = $bucket;
         $this->localTmpDir = $localTmpDir;
         $this->options = array_replace_recursive(
-            array('create' => false, 'region' => Region::EU_WEST_1, 'ACL' => $acl),
+            array('create' => false, 'region' => 'eu-west-1', 'ACL' => $acl),
             $options
         );
     }

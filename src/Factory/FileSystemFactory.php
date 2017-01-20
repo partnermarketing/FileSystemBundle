@@ -4,7 +4,6 @@ namespace Partnermarketing\FileSystemBundle\Factory;
 
 use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
 use Partnermarketing\FileSystemBundle\Adapter\LocalStorage;
-use Aws\S3\Enum\CannedAcl;
 use Aws\S3\S3Client as AmazonClient;
 use Partnermarketing\FileSystemBundle\Adapter\AmazonS3;
 
@@ -52,16 +51,27 @@ class FileSystemFactory
 
     private function buildAmazonS3FileSystem()
     {
-        $service = AmazonClient::factory(array(
-            'key'    => $this->config['amazon_s3']['key'],
-            'secret' => $this->config['amazon_s3']['secret'],
-            'region' => $this->config['amazon_s3']['region']
+        $service = new AmazonClient(array(
+            'credentials' => array(
+                'key'    => $this->config['amazon_s3']['key'],
+                'secret' => $this->config['amazon_s3']['secret']
+            ),
+            'region' => $this->config['amazon_s3']['region'],
+            'version' => '2006-03-01'
         ));
-        $fileSystem = new AmazonS3($service , $this->config['amazon_s3']['bucket'], CannedAcl::PUBLIC_READ, $this->tmpDir);
+        $fileSystem = new AmazonS3($service , $this->config['amazon_s3']['bucket'], 'public-read', $this->tmpDir);
 
-        $acl = CannedAcl::PUBLIC_READ;
+        $acl = 'public-read';
+        $allowedValues = [
+            'private',
+            'public-read',
+            'public-read-write',
+            'authenticated-read',
+            'bucket-owner-read',
+            'bucket-owner-full-control'
+        ];
         if (!empty($this->config['amazon_s3']['acl'])) {
-            if(!in_array($this->config['amazon_s3']['acl'], CannedAcl::values())){
+            if(!in_array($this->config['amazon_s3']['acl'], $allowedValues)){
                 throw new \Exception('Invalid S3 acl value.');
             }
             $acl = $this->config['amazon_s3']['acl'];
