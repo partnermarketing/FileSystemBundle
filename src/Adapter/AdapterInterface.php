@@ -92,6 +92,15 @@ interface AdapterInterface
     public function getURL($path);
 
     /**
+     * Gets the absolute URL to the file at $path that will expire
+     *
+     * @param  string $path
+     * @param  string|integer|\DateTime $expiresAt
+     * @return string URL to the file.
+     */
+    public function getExpiringURL($path, $expiresAt);
+
+    /**
      * Gets the size, in bytes, of the file at $path.
      *
      * @param  string $path
