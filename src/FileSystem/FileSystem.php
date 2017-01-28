@@ -147,6 +147,13 @@ class FileSystem implements AdapterInterface
     {
         return $this->adapter->copyToLocalTemporaryFile($path);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getService() {
+        return $this->adapter->getService();
+    }
 
     /**
      * Checks if a file exists, throws an error if it doesn't.

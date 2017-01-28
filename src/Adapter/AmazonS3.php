@@ -305,6 +305,13 @@ class AmazonS3 implements AdapterInterface
 
         return $target;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getService() {
+        return $this->service;
+    }
 
     /**
      * Returns an s3 location in normalised format, plus parses the bucket name
