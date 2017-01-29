@@ -309,7 +309,8 @@ class AmazonS3 implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function getService() {
+    public function getService()
+    {
         return $this->service;
     }
 

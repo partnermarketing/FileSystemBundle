@@ -151,7 +151,8 @@ class FileSystem implements AdapterInterface
     /**
      * {@inheritDoc}
      */
-    public function getService() {
+    public function getService()
+    {
         return $this->adapter->getService();
     }
 
@@ -167,5 +168,4 @@ class FileSystem implements AdapterInterface
             throw new FileDoesNotExistException($path);
         }
     }
-
 }

@@ -27,20 +27,26 @@ class FileSystemFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildDefault()
     {
-        $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\AdapterInterface',
-            $this->factory->build());
+        $this->assertInstanceOf(
+            'Partnermarketing\FileSystemBundle\Adapter\AdapterInterface',
+            $this->factory->build()
+        );
     }
 
     public function testBuildLocalStorage()
     {
-        $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\LocalStorage',
-            $this->factory->build('local_storage'));
+        $this->assertInstanceOf(
+            'Partnermarketing\FileSystemBundle\Adapter\LocalStorage',
+            $this->factory->build('local_storage')
+        );
     }
 
     public function testBuildAmazonS3()
     {
-        $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\AmazonS3',
-            $this->factory->build('amazon_s3'));
+        $this->assertInstanceOf(
+            'Partnermarketing\FileSystemBundle\Adapter\AmazonS3',
+            $this->factory->build('amazon_s3')
+        );
     }
 
     /**
@@ -69,7 +75,7 @@ class FileSystemFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory = new FileSystemFactory('amazon_s3', $this->config, '/tmp');
 
         $s3Adaptor = $this->factory->build('amazon_s3');
-        $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\AmazonS3',$s3Adaptor);
+        $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\AmazonS3', $s3Adaptor);
     }
     
     public function testDefaultsTempDirCorrectly()
@@ -97,6 +103,6 @@ class FileSystemFactoryTest extends \PHPUnit_Framework_TestCase
         
         $adapter->delete($initFile);
         $adapter->delete($tmpFile);
-        $adapter->delete(substr($tmpFile, 0 , (strrpos($tmpFile, "."))));
+        $adapter->delete(substr($tmpFile, 0, (strrpos($tmpFile, "."))));
     }
 }

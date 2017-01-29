@@ -32,7 +32,9 @@ class FindCommand extends ContainerAwareCommand
     {
         $adapterName = $input->getArgument('adapter');
         if (!in_array($adapterName, $this->availableAdapters)) {
-            $output->writeln('Invalid adapter name supplied! Adapters available: ' . implode(', ', $this->availableAdapters));
+            $output->writeln(
+                'Invalid adapter name supplied! Adapters available: ' . implode(', ', $this->availableAdapters)
+            );
 
             return;
         }
