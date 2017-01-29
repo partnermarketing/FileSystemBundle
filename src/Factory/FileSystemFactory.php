@@ -16,11 +16,11 @@ class FileSystemFactory
     private $config;
     private $tmpDir;
 
-    public function __construct($defaultFileSystem, $config, $tmpDir)
+    public function __construct($defaultFileSystem, $config, $tmpDir = null)
     {
         $this->defaultFileSystem = $defaultFileSystem;
         $this->config = $config;
-        $this->tmpDir = $tmpDir;
+        $this->tmpDir = $tmpDir ?: sys_get_temp_dir();
     }
 
     /**

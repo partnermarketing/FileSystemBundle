@@ -71,4 +71,32 @@ class FileSystemFactoryTest extends \PHPUnit_Framework_TestCase
         $s3Adaptor = $this->factory->build('amazon_s3');
         $this->assertInstanceOf('Partnermarketing\FileSystemBundle\Adapter\AmazonS3',$s3Adaptor);
     }
+    
+    public function testDefaultsTempDirCorrectly()
+    {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped('HHVM does not support the moving of the configured temp directory as PHP does.');
+        }
+        
+        //Force PHP to use this directory as the system temp directory.
+        putenv('TMPDIR='.__DIR__.'/');
+        
+        $this->config = [
+            'local_storage' => ['path' => '', 'url' => 'http://localhost/tmp'],
+            'amazon_s3' => ['key' => '', 'secret' => '', 'region' => '', 'bucket' => ''],
+        ];
+        $this->factory = new FileSystemFactory('amazon_s3', $this->config);
+        $adapter = $this->factory->build('local_storage');
+        
+        $initFile = __DIR__.'/lorem.txt';
+        $adapter->writeContent($initFile, 'Lorem Ipsum');
+        $tmpFile = $adapter->copyToLocalTemporaryFile($initFile);
+        
+        $this->assertCount(4, $adapter->getFiles(__DIR__));
+        $this->assertTrue($adapter->exists($tmpFile));
+        
+        $adapter->delete($initFile);
+        $adapter->delete($tmpFile);
+        $adapter->delete(substr($tmpFile, 0 , (strrpos($tmpFile, "."))));
+    }
 }
