@@ -62,7 +62,7 @@ class FileSystemFactory
             'region' => $this->config['amazon_s3']['region'],
             'version' => '2006-03-01'
         ));
-        $fileSystem = new AmazonS3($service, $this->config['amazon_s3']['bucket'], 'public-read', $this->tmpDir);
+        $fileSystem = new AmazonS3($service, $this->config['amazon_s3']['bucket'], $this->tmpDir, 'public-read');
 
         $acl = 'public-read';
         $allowedValues = [
@@ -81,7 +81,7 @@ class FileSystemFactory
         }
         $bucket = $this->config['amazon_s3']['bucket'];
 
-        $fileSystem = new AmazonS3($service, $bucket, $acl, $this->tmpDir);
+        $fileSystem = new AmazonS3($service, $bucket, $this->tmpDir, $acl);
 
 
         return $fileSystem;
