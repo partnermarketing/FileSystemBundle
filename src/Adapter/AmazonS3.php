@@ -25,7 +25,7 @@ class AmazonS3 implements AdapterInterface
      * @param string           $acl
      * @param array            $options
      */
-    public function __construct(AmazonClient $service, $bucket, $acl = 'public-read', $localTmpDir, $options = array())
+    public function __construct(AmazonClient $service, $bucket, $localTmpDir, $acl = 'public-read', $options = array())
     {
         $this->service = $service;
         $this->bucket  = $bucket;
@@ -305,7 +305,7 @@ class AmazonS3 implements AdapterInterface
 
         return $target;
     }
-    
+
     /**
      * {@inheritDoc}
      */
