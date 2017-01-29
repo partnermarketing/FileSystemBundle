@@ -221,6 +221,13 @@ class LocalStorage implements AdapterInterface
 
         return $target;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getService() {
+        return $this->service;
+    }
 
     /**
      * @param  string $input
