@@ -109,7 +109,7 @@ interface AdapterInterface
     
     /**
      * Gets the internal provider used for communication with the configured filesystem.
-     * 
+     *
      * @return object The S3Client or SymfonyFileSystem object currently in-use
      */
     public function getService();

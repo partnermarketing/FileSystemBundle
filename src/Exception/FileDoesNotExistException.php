@@ -16,5 +16,4 @@ class FileDoesNotExistException extends \RuntimeException
             $previous
         );
     }
-
 }

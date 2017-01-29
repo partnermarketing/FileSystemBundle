@@ -38,7 +38,10 @@ class FileSystemFactory
             case 'amazon_s3':
                 return $this->buildAmazonS3FileSystem();
             default:
-                throw new \Exception('The configuration for default_file_system needs to be set in the parameters.yml or the given adapter name did not match any existing file system');
+                throw new \Exception(
+                    'The configuration for default_file_system needs to be set in the parameters.yml'
+                    .' or the given adapter name did not match any existing file system'
+                );
         }
     }
 
@@ -59,7 +62,7 @@ class FileSystemFactory
             'region' => $this->config['amazon_s3']['region'],
             'version' => '2006-03-01'
         ));
-        $fileSystem = new AmazonS3($service , $this->config['amazon_s3']['bucket'], 'public-read', $this->tmpDir);
+        $fileSystem = new AmazonS3($service, $this->config['amazon_s3']['bucket'], 'public-read', $this->tmpDir);
 
         $acl = 'public-read';
         $allowedValues = [
@@ -71,14 +74,14 @@ class FileSystemFactory
             'bucket-owner-full-control'
         ];
         if (!empty($this->config['amazon_s3']['acl'])) {
-            if(!in_array($this->config['amazon_s3']['acl'], $allowedValues)){
+            if (!in_array($this->config['amazon_s3']['acl'], $allowedValues)) {
                 throw new \Exception('Invalid S3 acl value.');
             }
             $acl = $this->config['amazon_s3']['acl'];
         }
         $bucket = $this->config['amazon_s3']['bucket'];
 
-        $fileSystem = new AmazonS3($service , $bucket, $acl, $this->tmpDir);
+        $fileSystem = new AmazonS3($service, $bucket, $acl, $this->tmpDir);
 
 
         return $fileSystem;
