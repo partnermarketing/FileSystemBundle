@@ -140,7 +140,7 @@ $fileExists = $this->filesystem->exists($varWithFilePath);
 ### Check if path is a directory
 
 ```php
-$isDirectory = $this->filesystem->exists($varWithFilePath);
+$isDirectory = $this->filesystem->isDirectory($varWithFilePath);
 ```
 
 ### Gets the Absolute URL to a file
