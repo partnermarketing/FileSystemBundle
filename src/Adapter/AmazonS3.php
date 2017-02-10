@@ -88,7 +88,7 @@ class AmazonS3 implements AdapterInterface
             'ContentType' => Mimetypes::getInstance()->fromFilename($path)
         ));
 
-        $this->service->waitUntilObjectExists(array(
+        $this->service->waitUntil('ObjectExists', array(
             'Bucket' => $bucket,
             'Key'    => $path
         ));
@@ -255,7 +255,7 @@ class AmazonS3 implements AdapterInterface
             array('Bucket' => $this->bucket, 'LocationConstraint' => $this->options['region'])
         );
 
-        $this->service->waitUntilBucketExists(array('Bucket' => $this->bucket));
+        $this->service->waitUntil('BucketExists', array('Bucket' => $this->bucket));
 
         if (!$response['Location']) {
             throw new \RuntimeException(sprintf(
