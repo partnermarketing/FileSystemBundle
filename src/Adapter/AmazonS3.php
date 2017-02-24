@@ -337,8 +337,13 @@ class AmazonS3 implements AdapterInterface
              *  Try to detect the bucket name from the hostname
              */
             $host = parse_url($input, PHP_URL_HOST);
-            if (preg_match('/.s3[-\.a-z0-9]*\.amazonaws\.com$/', $host)) {
-                $bucket = substr($host, 0, strpos($host, '.s3'));
+            if (preg_match('/s3[-\.a-z0-9]*\.amazonaws\.com$/', $host)) {
+                if (strpos($host, '.s3') === false) {
+                    $path = ltrim($path, '/');
+                    $path = substr($path, strpos($path, '/'));
+                } else {
+                    $bucket = substr($host, 0, strpos($host, '.s3'));
+                }
             } else {
                 $bucket = $host;
             }
