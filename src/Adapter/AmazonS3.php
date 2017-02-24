@@ -338,9 +338,19 @@ class AmazonS3 implements AdapterInterface
              */
             $host = parse_url($input, PHP_URL_HOST);
             if (preg_match('/s3[-\.a-z0-9]*\.amazonaws\.com$/', $host)) {
+                // In this case we have a hostname which is just
+                // something like: s3-eu-west.amazonaws.com. In this
+                // case the bucket name is not part of the hostname,
+                // which means the root of the path is instead (this is
+                // a path-style name). EG:
+                // s3-eu-west.amazonaws.com/pm2/somefile, the bucket
+                // name here is pm2
                 if (strpos($host, '.s3') === false) {
                     $path = ltrim($path, '/');
                     $path = substr($path, strpos($path, '/'));
+                // In this case, the hostname is something like:
+                // pm2.s3-eu-west.amazonaws.com, meaning that the bucket
+                // name is pm2
                 } else {
                     $bucket = substr($host, 0, strpos($host, '.s3'));
                 }
