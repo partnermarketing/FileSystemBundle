@@ -197,6 +197,14 @@ class LocalStorage implements AdapterInterface
 
         return $this->webUrl.'/'.$path;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getExpiringURL($path, $expiresAt) {
+        // Local storage cannot provide expiring URLs. Falling back...
+        return $this->getURL($path);
+    }
 
     /**
      * {@inheritDoc}

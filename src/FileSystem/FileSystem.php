@@ -135,6 +135,14 @@ class FileSystem implements AdapterInterface
     /**
      * {@inheritDoc}
      */
+    public function getExpiringURL($path, $expiresAt)
+    {
+        return $this->adapter->getExpiringURL($path, $expiresAt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getFileSize($path)
     {
         return $this->adapter->getFileSize($path);

@@ -282,6 +282,23 @@ class AmazonS3 implements AdapterInterface
     /**
      * {@inheritDoc}
      */
+    public function getExpiringURL($path, $expiresAt)
+    {
+        list($path, $bucket) = $this->pathOrUrlToPath($path);
+        
+        $command = $this->service->getCommand('GetObject', [
+            'Bucket' => $bucket,
+            'Key'    => $path
+        ]);
+        
+        $request = $this->service->createPresignedRequest($command, $expiresAt);
+        
+        return (string) $request->getUri();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getFileSize($path)
     {
         list($path, $bucket) = $this->pathOrUrlToPath($path);
