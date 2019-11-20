@@ -1,8 +1,8 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Tests\Unit\ServerFileSystem;
+namespace PartnerMarketing\FileSystemBundle\Tests\Unit\ServerFileSystem;
 
-use Partnermarketing\FileSystemBundle\ServerFileSystem\ServerFileSystem;
+use PartnerMarketing\FileSystemBundle\ServerFileSystem\ServerFileSystem;
 
 class ServerFileSystemTest extends \PHPUnit_Framework_TestCase
 {

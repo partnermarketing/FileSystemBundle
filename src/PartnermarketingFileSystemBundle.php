@@ -1,9 +1,9 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle;
+namespace PartnerMarketing\FileSystemBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class PartnermarketingFileSystemBundle extends Bundle
+class PartnerMarketingFileSystemBundle extends Bundle
 {
 }

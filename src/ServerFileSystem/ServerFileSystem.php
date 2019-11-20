@@ -1,6 +1,6 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\ServerFileSystem;
+namespace PartnerMarketing\FileSystemBundle\ServerFileSystem;
 
 use DirectoryIterator;
 
@@ -12,7 +12,7 @@ class ServerFileSystem
         $files = [];
 
         foreach ($iterator as $file) {
-            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
+            if (in_array($file->getFilename(), ['.', '..'])) {
                 continue;
             }
 
@@ -37,7 +37,7 @@ class ServerFileSystem
         $iterator = new DirectoryIterator($dir);
 
         foreach ($iterator as $file) {
-            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
+            if (in_array($file->getFilename(), ['.', '..'])) {
                 continue;
             }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Adapter;
+namespace PartnerMarketing\FileSystemBundle\Adapter;
 
 /**
  * Interface for all file system adapters.
@@ -106,7 +106,7 @@ interface AdapterInterface
      * @return string Path to the copied temporary file.
      */
     public function copyToLocalTemporaryFile($path);
-    
+
     /**
      * Gets the internal provider used for communication with the configured filesystem.
      *

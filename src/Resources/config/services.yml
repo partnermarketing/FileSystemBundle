@@ -1,7 +1,7 @@
 services:
-    partnermarketing_file_system.factory:
-        class: "Partnermarketing\\FileSystemBundle\\Factory\\FileSystemFactory"
+    PartnerMarketing\FileSystemBundle\Factory\FileSystemFactory:
+        class: PartnerMarketing\FileSystemBundle\Factory\FileSystemFactory
         arguments:
-            - "%partnermarketing_file_system.default_file_system%"
-            - "%partnermarketing_file_system.config%"
-            - "%partnermarketing_file_system.tmp_dir%"
+            - "%partner_marketing_file_system.default_file_system%"
+            - "%partner_marketing_file_system.config%"
+            - "%partner_marketing_file_system.tmp_dir%"

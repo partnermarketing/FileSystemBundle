@@ -1,6 +1,6 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Adapter;
+namespace PartnerMarketing\FileSystemBundle\Adapter;
 
 use Aws\S3\S3Client as AmazonClient;
 use Guzzle\Http\EntityBody;

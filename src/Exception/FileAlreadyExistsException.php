@@ -1,6 +1,6 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Exception;
+namespace PartnerMarketing\FileSystemBundle\Exception;
 
 /**
  * Exception to be thrown when a file already exists

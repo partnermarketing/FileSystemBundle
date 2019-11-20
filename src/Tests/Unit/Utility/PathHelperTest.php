@@ -1,8 +1,8 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Tests\Unit\Utility;
+namespace PartnerMarketing\FileSystemBundle\Tests\Unit\Utility;
 
-use Partnermarketing\FileSystemBundle\Utility\PathHelper;
+use PartnerMarketing\FileSystemBundle\Utility\PathHelper;
 
 class PathHelperTest extends \PHPUnit_Framework_TestCase
 {

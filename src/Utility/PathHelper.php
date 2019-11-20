@@ -1,6 +1,6 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Utility;
+namespace PartnerMarketing\FileSystemBundle\Utility;
 
 class PathHelper
 {

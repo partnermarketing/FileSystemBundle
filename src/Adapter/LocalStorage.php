@@ -1,9 +1,9 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Adapter;
+namespace PartnerMarketing\FileSystemBundle\Adapter;
 
-use Partnermarketing\FileSystemBundle\Exception\FileDoesNotExistException;
-use Partnermarketing\FileSystemBundle\ServerFileSystem\ServerFileSystem;
+use PartnerMarketing\FileSystemBundle\Exception\FileDoesNotExistException;
+use PartnerMarketing\FileSystemBundle\ServerFileSystem\ServerFileSystem;
 
 /**
  * LocalStorage specific file system adapter
@@ -221,7 +221,7 @@ class LocalStorage implements AdapterInterface
 
         return $target;
     }
-    
+
     /**
      * {@inheritDoc}
      */

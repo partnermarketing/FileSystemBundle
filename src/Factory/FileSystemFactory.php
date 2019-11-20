@@ -1,11 +1,12 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Factory;
+namespace PartnerMarketing\FileSystemBundle\Factory;
 
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
-use Partnermarketing\FileSystemBundle\Adapter\LocalStorage;
+use PartnerMarketing\FileSystemBundle\Adapter\LocalStorage;
 use Aws\S3\S3Client as AmazonClient;
-use Partnermarketing\FileSystemBundle\Adapter\AmazonS3;
+use PartnerMarketing\FileSystemBundle\Adapter\AmazonS3;
 
 /**
  * File system factory to deliver a file storage adapter.
@@ -24,11 +25,12 @@ class FileSystemFactory
     }
 
     /**
-     * @return \Partnermarketing\FileSystemBundle\Adapter\AdapterInterface
+     * @param null $adapterName
+     * @return \PartnerMarketing\FileSystemBundle\Adapter\AdapterInterface
      */
     public function build($adapterName = null)
     {
-        if (is_null($adapterName)) {
+        if ($adapterName === null) {
             $adapterName = $this->defaultFileSystem;
         }
 
@@ -38,7 +40,7 @@ class FileSystemFactory
             case 'amazon_s3':
                 return $this->buildAmazonS3FileSystem();
             default:
-                throw new \Exception(
+                throw new \RuntimeException(
                     'The configuration for default_file_system needs to be set in the parameters.yml'
                     .' or the given adapter name did not match any existing file system'
                 );
@@ -74,8 +76,8 @@ class FileSystemFactory
             'bucket-owner-full-control'
         ];
         if (!empty($this->config['amazon_s3']['acl'])) {
-            if (!in_array($this->config['amazon_s3']['acl'], $allowedValues)) {
-                throw new \Exception('Invalid S3 acl value.');
+            if (!in_array($this->config['amazon_s3']['acl'], $allowedValues, true)) {
+                throw new RuntimeException('Invalid S3 acl value.');
             }
             $acl = $this->config['amazon_s3']['acl'];
         }

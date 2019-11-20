@@ -1,9 +1,9 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\Tests\Unit\Adapter;
+namespace PartnerMarketing\FileSystemBundle\Tests\Unit\Adapter;
 
-use Partnermarketing\FileSystemBundle\Adapter\LocalStorage;
-use Partnermarketing\FileSystemBundle\Factory\FileSystemFactory;
+use PartnerMarketing\FileSystemBundle\Adapter\LocalStorage;
+use PartnerMarketing\FileSystemBundle\Factory\FileSystemFactory;
 
 class LocalStorageTest extends \PHPUnit_Framework_TestCase
 {

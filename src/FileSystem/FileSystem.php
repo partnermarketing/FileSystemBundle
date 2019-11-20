@@ -1,10 +1,10 @@
 <?php
 
-namespace Partnermarketing\FileSystemBundle\FileSystem;
+namespace PartnerMarketing\FileSystemBundle\FileSystem;
 
-use Partnermarketing\FileSystemBundle\Adapter\AdapterInterface;
-use Partnermarketing\FileSystemBundle\Exception\FileAlreadyExistsException;
-use Partnermarketing\FileSystemBundle\Exception\FileDoesNotExistException;
+use PartnerMarketing\FileSystemBundle\Adapter\AdapterInterface;
+use PartnerMarketing\FileSystemBundle\Exception\FileAlreadyExistsException;
+use PartnerMarketing\FileSystemBundle\Exception\FileDoesNotExistException;
 
 class FileSystem implements AdapterInterface
 {
@@ -147,7 +147,7 @@ class FileSystem implements AdapterInterface
     {
         return $this->adapter->copyToLocalTemporaryFile($path);
     }
-    
+
     /**
      * {@inheritDoc}
      */
