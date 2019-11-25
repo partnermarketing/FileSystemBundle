@@ -22,13 +22,18 @@ class AmazonS3 implements AdapterInterface
      *
      * @param \Aws\S3\S3Client $service
      * @param $bucket
-     * @param string           $acl
-     * @param array            $options
+     * @param string $acl
+     * @param array $options
      */
-    public function __construct(AmazonClient $service, $bucket, $localTmpDir, $acl = 'public-read', $options = array())
-    {
+    public function __construct(
+        AmazonClient $service,
+        string $bucket = '',
+        string $localTmpDir = '',
+        $acl = 'public-read',
+        $options = array()
+    ) {
         $this->service = $service;
-        $this->bucket  = $bucket;
+        $this->bucket = $bucket;
         $this->localTmpDir = $localTmpDir;
         $this->options = array_replace_recursive(
             array('create' => false, 'region' => 'eu-west-1', 'ACL' => $acl),
@@ -58,7 +63,7 @@ class AmazonS3 implements AdapterInterface
 
         $response['Body']->rewind();
 
-        return (string) $response['Body'];
+        return (string)$response['Body'];
     }
 
     /**
@@ -90,7 +95,7 @@ class AmazonS3 implements AdapterInterface
 
         $this->service->waitUntil('ObjectExists', array(
             'Bucket' => $bucket,
-            'Key'    => $path
+            'Key' => $path
         ));
 
         return $path;
@@ -109,7 +114,7 @@ class AmazonS3 implements AdapterInterface
         $this->service->copyObject(array(
             'Bucket' => $targetBucket,
             'Key' => $targetPath,
-            'CopySource' => urlencode($sourceBucket.'/'.$sourcePath),
+            'CopySource' => urlencode($sourceBucket . '/' . $sourcePath),
             'ACL' => $this->options['ACL']
         ));
 
@@ -143,7 +148,8 @@ class AmazonS3 implements AdapterInterface
         $this->ensureBucketExists();
 
         $list = $this->service->getIterator('ListObjects', array(
-            'Bucket' => $bucket, 'Prefix' => $directory
+            'Bucket' => $bucket,
+            'Prefix' => $directory
         ));
 
         $files = [];
@@ -175,11 +181,11 @@ class AmazonS3 implements AdapterInterface
         $files = $this->getFiles($sourceDir);
 
         $batch = array();
-        for ($i = 0; $i < count($files); $i++) {
+        for ($i = 0, $iMax = count($files); $i < $iMax; $i++) {
             $targetFile = str_replace($sourceDir, "", $files[$i]);
-            $batch[] =  $this->service->getCommand('CopyObject', array(
-                'Bucket'     => $targetBucket,
-                'Key'        => "{$targetDir}{$targetFile}",
+            $batch[] = $this->service->getCommand('CopyObject', array(
+                'Bucket' => $targetBucket,
+                'Key' => "{$targetDir}{$targetFile}",
                 'CopySource' => "{$sourceBucket}/{$files[$i]}",
             ));
         }
@@ -210,7 +216,7 @@ class AmazonS3 implements AdapterInterface
     {
         list($path, $bucket) = $this->pathOrUrlToPath($path);
 
-        if ($this->exists($path.'/')) {
+        if ($this->exists($path . '/')) {
             return true;
         }
 
@@ -228,10 +234,10 @@ class AmazonS3 implements AdapterInterface
     }
 
     /**
-    * Ensures the specified bucket exists. If is does not, and create is true, it will try to create it.
-    *
-    * @return boolean
-    */
+     * Ensures the specified bucket exists. If is does not, and create is true, it will try to create it.
+     *
+     * @return boolean
+     */
     private function ensureBucketExists()
     {
         if ($this->haveEnsuredBucketExists) {
@@ -286,7 +292,7 @@ class AmazonS3 implements AdapterInterface
     {
         list($path, $bucket) = $this->pathOrUrlToPath($path);
 
-        return (int) $this->service->headObject([
+        return (int)$this->service->headObject([
             'Bucket' => $bucket,
             'Key' => $path,
         ])->get('ContentLength');
@@ -318,7 +324,7 @@ class AmazonS3 implements AdapterInterface
      * Returns an s3 location in normalised format, plus parses the bucket name
      * from the URL if a URL is used.
      *
-     * @param  string $input
+     * @param string $input
      * @return array  Contains two values:
      *                Index 0: the path to the file in S3.
      *                Index 1: the S3 bucket name.
@@ -348,9 +354,9 @@ class AmazonS3 implements AdapterInterface
                 if (strpos($host, '.s3') === false) {
                     $path = ltrim($path, '/');
                     $path = substr($path, strpos($path, '/'));
-                // In this case, the hostname is something like:
-                // pm2.s3-eu-west.amazonaws.com, meaning that the bucket
-                // name is pm2
+                    // In this case, the hostname is something like:
+                    // pm2.s3-eu-west.amazonaws.com, meaning that the bucket
+                    // name is pm2
                 } else {
                     $bucket = substr($host, 0, strpos($host, '.s3'));
                 }
