@@ -18,14 +18,18 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('partner_marketing_file_system');
+        $treeBuilder = new TreeBuilder('partnermarketing_file_system');
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $rootNode = $treeBuilder->root('partnermarketing_file_system');
+        }
 
         $rootNode
             ->children()
-                ->scalarNode('default_file_system')
-                    ->isRequired()
-                ->end()
+            ->scalarNode('default_file_system')
+            ->defaultValue('local_storage')
+            ->end()
                 ->scalarNode('tmp_dir')
                     ->defaultValue('/tmp')
                 ->end()
