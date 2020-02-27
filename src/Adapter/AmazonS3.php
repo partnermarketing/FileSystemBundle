@@ -3,8 +3,7 @@
 namespace PartnerMarketing\FileSystemBundle\Adapter;
 
 use Aws\S3\S3Client as AmazonClient;
-use Guzzle\Http\EntityBody;
-use Guzzle\Http\Mimetypes;
+use GuzzleHttp\Stream\Stream;
 
 /**
  * Amazon specific file system adapter
@@ -73,7 +72,7 @@ class AmazonS3 implements AdapterInterface
     {
         list($path, $bucket) = $this->pathOrUrlToPath($path);
 
-        return $this->writeContent($path, EntityBody::factory(fopen($source, 'r')));
+        return $this->writeContent($path, Stream::factory(fopen($source, 'r')));
     }
 
     /**
@@ -90,7 +89,7 @@ class AmazonS3 implements AdapterInterface
             'Key' => $path,
             'Body' => $content,
             'ACL' => $this->options['ACL'],
-            'ContentType' => Mimetypes::getInstance()->fromFilename($path)
+            'ContentType' => GuzzleHttp\Psr7\mimetype_from_filename($path)
         ));
 
         $this->service->waitUntil('ObjectExists', array(
