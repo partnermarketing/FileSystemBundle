@@ -4,6 +4,7 @@ namespace PartnerMarketing\FileSystemBundle\Adapter;
 
 use Aws\S3\S3Client as AmazonClient;
 use GuzzleHttp\Stream\Stream;
+use function GuzzleHttp\Psr7\mimetype_from_filename;
 
 /**
  * Amazon specific file system adapter
@@ -89,7 +90,7 @@ class AmazonS3 implements AdapterInterface
             'Key' => $path,
             'Body' => $content,
             'ACL' => $this->options['ACL'],
-            'ContentType' => GuzzleHttp\Psr7\mimetype_from_filename($path)
+            'ContentType' => mimetype_from_filename($path)
         ));
 
         $this->service->waitUntil('ObjectExists', array(
