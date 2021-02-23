@@ -1,6 +1,8 @@
 services:
+    _defaults:
+        public: true
     partnermarketing_file_system.factory:
-        class: "Partnermarketing\\FileSystemBundle\\Factory\\FileSystemFactory"
+        class: Partnermarketing\FileSystemBundle\Factory\FileSystemFactory
         arguments:
             - "%partnermarketing_file_system.default_file_system%"
             - "%partnermarketing_file_system.config%"
