@@ -108,7 +108,7 @@ $url = $this->filesystem->writeContent($path, $content);
 
 ```php
 // Deletes the file $path:
-$isDeleted = $this->filesystem->writeContent($path);
+$isDeleted = $this->filesystem->delete($path);
 ```
 
 ### Rename a file
